@@ -21,8 +21,6 @@
 #define short 32768       // But I prefer using these values ​​in small case.
 #define null (void *)0b0  //
 
-#define main _start
-
 int gameover = false,
     score = 0,
     snakeX[short], snakeY[short],
