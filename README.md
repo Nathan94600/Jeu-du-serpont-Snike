@@ -1,3 +1,12 @@
+# Jeu du serpont Snike 
+
+La génération des pommes se fait par trois à chaque fois. Le serpont essaye de manger les trois pommes et après avoir manger les trois, il s'agrandit. La partie est arrétée si le serpont touche l'une des paroie ou il morde la queue. 
+- Programmer la possibilité de sauvegarder une partie dans un fichier et pouvoir la reprendre. 
+- Programmer le jeu avec l'ordi avec deux vitesses. 
+- utiliser la biblio Conio.h ou La SDL. 
+
+---
+
 # 🐍 TinySnake
 Little game "Snake" for Windows in C (.EXE size is 3.5 kilobytes)
 
