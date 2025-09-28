@@ -140,15 +140,19 @@ void logic() {
     snakeX[0] += dirX;
     snakeY[0] += dirY;
 
-    // Teleport the snake to the opposite side of the map if it hits a wall
-    if (snakeX[0] == 0)
-        snakeX[0] = WIDTH - 2;
-    else if (snakeX[0] == WIDTH - 1)
-        snakeX[0] = 1;
-    if (snakeY[0] == 0)
-        snakeY[0] = HEIGHT - 2;
-    else if (snakeY[0] == HEIGHT - 1)
-        snakeY[0] = 1;
+    // Met fin à la partie si il y a une collision avec un mur
+    if (snakeX[0] == 0 || snakeX[0] == WIDTH - 1 || snakeY[0] == 0 || snakeY[0] == HEIGHT - 1) {
+        if (snakeX[0] == 0)
+            snakeX[0] = 1;
+        else if (snakeX[0] == WIDTH - 1)
+            snakeX[0] = WIDTH - 2;
+        if (snakeY[0] == 0)
+            snakeY[0] = 1;
+        else if (snakeY[0] == HEIGHT - 1)
+            snakeY[0] = HEIGHT - 2;
+
+        gameover = true;
+    };
 
     for (int i = 1; i < snake_length; i++) {
         prev2X = snakeX[i];
