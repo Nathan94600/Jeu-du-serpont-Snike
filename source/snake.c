@@ -35,20 +35,37 @@ HANDLE hConsole = null;
 CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
 
 void generateApples() {
+    int badPos = false;
+
     do {
         apple1X = 1 + rand() % (WIDTH - 2);
         apple1Y = 1 + rand() % (HEIGHT - 2);
-    } while (snakeX[0] == apple1X && snakeY[0] == apple1Y);
+
+        for (int i = 0; i < short; i++) {
+            if (snakeX[i] == apple1X && snakeY[i] == apple1Y) badPos = true;
+        }
+    } while (badPos);
 
     do {
         apple2X = 1 + rand() % (WIDTH - 2);
         apple2Y = 1 + rand() % (HEIGHT - 2);
-    } while ((snakeX[0] == apple2X && snakeY[0] == apple2Y) || (apple1X == apple2X && apple1Y == apple2Y));
+
+        if (apple1X == apple2X && apple1Y == apple2Y) badPos = true;
+        else for (int i = 0; i < short; i++) {
+            if (snakeX[i] == apple2X && snakeY[i] == apple2Y) badPos = true;
+        }
+    } while (badPos);
 
     do {
         apple3X = 1 + rand() % (WIDTH - 2);
         apple3Y = 1 + rand() % (HEIGHT - 2);
-    } while ((snakeX[0] == apple3X && snakeY[0] == apple3Y) || (apple1X == apple3X && apple1Y == apple3Y) || (apple2X == apple3X && apple2Y == apple3Y));
+
+        if (apple1X == apple3X && apple1Y == apple3Y) badPos = true;
+        else if (apple2X == apple3X && apple2Y == apple3Y) badPos = true;
+        else for (int i = 0; i < short; i++) {
+            if (snakeX[i] == apple3X && snakeY[i] == apple3Y) badPos = true;
+        }
+    } while (badPos);
 }
 
 void setup() {
