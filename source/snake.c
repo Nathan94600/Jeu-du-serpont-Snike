@@ -267,16 +267,34 @@ void main() {
 
     if (loadSaveChar == 'o') {
         printf("\nChemin de la sauvegarde: ");
-        scanf("%s", filePath);
+        scanf("%s", &filePath);
 
-    	do {
-	        printf("\nFichier introuable, redonnez le chemin de la sauvegarde: ");
-            scanf("%s", filePath);
-        } while (!fileExists(filePath));
+    	while (!fileExists(filePath)) {
+            printf("\nFichier introuable, redonnez le chemin de la sauvegarde: ");
+            scanf("%s", &filePath);
+        }
 
         // Charger la sauvegarde
 
-        
+        printf("\nChargement de la sauvegarde ...");
+
+        f = fopen(filePath, "r");
+
+        fscanf(
+            f,
+            "%d %d %d %d %d %d %d %d %d %d %d %d %d",
+            &vitesse, &score, &gameover, &apple1X, &apple1Y, &apple2X, &apple2Y, &apple3X, &apple3Y, &eated, &dirX, &dirY, &snake_length
+        );
+
+        for (int i = 0; i < short; i++) {
+            fscanf(f, " %d %d", &snakeX[i], &snakeY[i]);
+        }
+
+        fclose(f);
+
+        printf("\nLancement dans 3 secondes");
+
+        Sleep(3000);
     } else {
     	do {
 	    	printf("Choisissez une vitesse (1 ou 2): ");
@@ -285,91 +303,91 @@ void main() {
 	
 	    	vitesse = strtod(ch, NULL);
         } while (vitesse != 1 && vitesse != 2);
+    }
 
-        speedDelay /= vitesse * vitesse;
+    speedDelay /= vitesse * vitesse;
 
-        char title[short];
+    char title[short];
 
-        sprintf(title, "Tiny Snake (x%d)", bitness);
+    sprintf(title, "Tiny Snake (x%d)", bitness);
 
-        SetConsoleTitleA(title);
+    SetConsoleTitleA(title);
 
-        int buffer[] = {(WIDTH * 2) + 1, HEIGHT + 8};
+    int buffer[] = {(WIDTH * 2) + 1, HEIGHT + 8};
 
-        hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
-        SMALL_RECT windowSize = {0, 0, buffer[0] - 1, buffer[1] - 1};
-        SetConsoleWindowInfo(hConsole, true, &windowSize);
+    SMALL_RECT windowSize = {0, 0, buffer[0] - 1, buffer[1] - 1};
+    SetConsoleWindowInfo(hConsole, true, &windowSize);
 
-        SetConsoleScreenBufferSize(hConsole, (COORD){buffer[0], buffer[1]});
+    SetConsoleScreenBufferSize(hConsole, (COORD){buffer[0], buffer[1]});
 
-        CONSOLE_CURSOR_INFO cursorinfo = {0};
-        cursorinfo.dwSize = 1;
-        cursorinfo.bVisible = FALSE;  // Turns off the blinking cursor (Thank to https://github.com/R32GTT)
-        SetConsoleCursorInfo(hConsole, &cursorinfo);
+    CONSOLE_CURSOR_INFO cursorinfo = {0};
+    cursorinfo.dwSize = 1;
+    cursorinfo.bVisible = FALSE;  // Turns off the blinking cursor (Thank to https://github.com/R32GTT)
+    SetConsoleCursorInfo(hConsole, &cursorinfo);
 
-        printf("Coded by DosX-dev (GitHub)\nUSE ONLY ENGLISH KEYBOARD LAYOUT! (WASD)\n");
+    printf("Coded by DosX-dev (GitHub)\nUSE ONLY ENGLISH KEYBOARD LAYOUT! (WASD)\n");
 
-        setup();  // Initialize the game
+    if (loadSaveChar == 'n') setup();  // Initialize the game
 
-        while (!gameover && !stop) {
-            render();  // Draw the current state of the game
-            input();   // Handle user input
-            logic();   // Update the game logic
+    while (!gameover && !stop) {
+        render();  // Draw the current state of the game
+        input();   // Handle user input
+        logic();   // Update the game logic
 
-            Sleep(speedDelay);  // Add a delay to control the snake's speed
-        }
+        Sleep(speedDelay);  // Add a delay to control the snake's speed
+    }
 
-        if (stop) {
-            // Système de sauvegarde
-            printf("\nNom de la sauvegarde: ");
+    if (stop) {
+        // Système de sauvegarde
+        printf("\nNom de la sauvegarde: ");
+        scanf("%s", &saveName);
+
+           strcat(saveName, ".save");
+
+        while (fileExists(saveName))
+        {
+            printf("\nLe fichier %s existe deja, choisissez un nouveau nom pour la sauvegarde: ", saveName);
             scanf("%s", &saveName);
 
             strcat(saveName, ".save");
+        }
 
-            while (fileExists(saveName))
-            {
-                printf("\nLe fichier %s existe deja, choisissez un nouveau nom pour la sauvegarde: ", saveName);
-                scanf("%s", &saveName);
+        f = fopen(saveName, "a");
 
-                strcat(saveName, ".save");
-            }
+        fprintf(
+            f,
+            "%d %d %d %d %d %d %d %d %d %d %d %d %d",
+            vitesse, score, gameover, apple1X, apple1Y, apple2X, apple2Y, apple3X, apple3Y, eated, dirX, dirY, snake_length
+        );
 
-            f = fopen(saveName, "a");
+         for (int i = 0; i < short; i++) {
+            fprintf(f, " %d %d", snakeX[i], snakeY[i]);
+        }
 
-            fprintf(
-                f,
-                "%d %d %d %d %d %d %d %d %d %d %d %d %d",
-                vitesse, score, gameover, apple1X, apple1Y, apple2X, apple2Y, apple3X, apple3Y, eated, dirX, dirY, snake_length
-            );
+        fclose(f);
 
-            for (int i = 0; i < short; i++) {
-                fprintf(f, " %d %d", snakeX[i], snakeY[i]);
-            }
+        printf("\nPartie sauvegarder dans le fichier %s", saveName);
 
-            fclose(f);
+        return;
+    } else {
+        dirX = 0;
+        dirY = 0;
 
-            printf("\nPartie sauvegarder dans le fichier %s", saveName);
+        render();  // Run the renderer for the last time to draw the desired colors (lose)
 
-            return;
-        } else {
-            dirX = 0;
-            dirY = 0;
+        printf("\n");
 
-            render();  // Run the renderer for the last time to draw the desired colors (lose)
+        draw("==============\n=", BACKGROUND_RED | FOREGROUND_RED);
+        draw(" GAME OVER! ", BACKGROUND_WHITE | FOREGROUND_RED);
+        draw("=\n==============", BACKGROUND_RED | FOREGROUND_RED);
 
-            printf("\n");
+        printf("\nPress X to exit");
 
-            draw("==============\n=", BACKGROUND_RED | FOREGROUND_RED);
-            draw(" GAME OVER! ", BACKGROUND_WHITE | FOREGROUND_RED);
-            draw("=\n==============", BACKGROUND_RED | FOREGROUND_RED);
-
-            printf("\nPress X to exit");
-
-            while (true) {
-                if (tolower(_getch()) == 'x') {
-                    return;
-                }
+        while (true) {
+            if (tolower(_getch()) == 'x') {
+                return;
             }
         }
     }
