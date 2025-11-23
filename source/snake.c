@@ -136,6 +136,8 @@ void render() {
 
     draw("SCORE", BACKGROUND_YELLOW);  // Draw the "SCORE" label in yellow
     printf(": %d\n", score);           // Display the current score value
+
+    printf("A: Gauche | S: Haut | D: Droite | W: Bas | C: sauvegarder la partie\n");
 }
 
 // Function to handle user input
