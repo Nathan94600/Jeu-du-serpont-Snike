@@ -38,6 +38,8 @@ void generateApples() {
     int badPos = false;
 
     do {
+        badPos = false;
+
         apple1X = 1 + rand() % (WIDTH - 2);
         apple1Y = 1 + rand() % (HEIGHT - 2);
 
@@ -47,6 +49,8 @@ void generateApples() {
     } while (badPos);
 
     do {
+        badPos = false;
+
         apple2X = 1 + rand() % (WIDTH - 2);
         apple2Y = 1 + rand() % (HEIGHT - 2);
 
@@ -57,6 +61,8 @@ void generateApples() {
     } while (badPos);
 
     do {
+        badPos = false;
+
         apple3X = 1 + rand() % (WIDTH - 2);
         apple3Y = 1 + rand() % (HEIGHT - 2);
 
